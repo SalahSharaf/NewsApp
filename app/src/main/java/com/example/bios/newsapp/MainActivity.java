@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
@@ -42,16 +41,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
-        if (listAdapter == null) {
-            listAdapter = new MyListAdapter(getBaseContext(), 0, data);
-            listView.setAdapter(listAdapter);
-        }
         if(data==null){
             textView.setText("No Items To Display");
         }else {
             textView.setVisibility(View.GONE);
         }
-        listAdapter.addAll(data);
+        listAdapter = new MyListAdapter(getBaseContext(), 0, data);
+        listView.setAdapter(listAdapter);
         progressBar.setVisibility(View.GONE);
     }
 
