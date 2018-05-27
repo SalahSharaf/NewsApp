@@ -4,9 +4,11 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,10 +16,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
     public String URL = "https://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test";
-    public static ListView listView;
-    public static MyListAdapter listAdapter;
-    public static TextView textView;
-    public static ProgressBar progressBar;
+    public ListView listView;
+    public MyListAdapter listAdapter;
+    public TextView textView;
+    public ProgressBar progressBar;
+    SwipeRefreshLayout refreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         listView = findViewById(R.id.listView);
         textView = findViewById(R.id.text);
         progressBar = findViewById(R.id.progress);
+        refreshLayout = findViewById(R.id.swipeRefresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getLoaderManager().initLoader(0,null,MainActivity.this);
+                textView.setText("");
+            }
+        });
         ConnectivityManager connectivityManager= (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo info=connectivityManager.getActiveNetworkInfo();
         if(info!=null&&info.isConnected()){
@@ -42,13 +53,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
         if(data==null){
-            textView.setText("No Items To Display");
+            textView.setText("No Items To Display, swipe to refresh");
         }else {
             textView.setVisibility(View.GONE);
         }
         listAdapter = new MyListAdapter(getBaseContext(), 0, data);
         listView.setAdapter(listAdapter);
         progressBar.setVisibility(View.GONE);
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
