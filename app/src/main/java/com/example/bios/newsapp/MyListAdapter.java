@@ -49,6 +49,7 @@ public class MyListAdapter extends ArrayAdapter<News> implements View.OnClickLis
         int index = (int) v.getTag();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(news.get(index).getWebUrl()));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().startActivity(intent);
     }
 }

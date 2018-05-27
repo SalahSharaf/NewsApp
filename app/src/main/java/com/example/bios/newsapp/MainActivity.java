@@ -42,10 +42,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
-        textView.setText("No Items To Display");
         if (listAdapter == null) {
             listAdapter = new MyListAdapter(getBaseContext(), 0, data);
             listView.setAdapter(listAdapter);
+        }
+        if(data==null){
+            textView.setText("No Items To Display");
+        }else {
+            textView.setVisibility(View.GONE);
         }
         listAdapter.addAll(data);
         progressBar.setVisibility(View.GONE);

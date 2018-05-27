@@ -60,7 +60,8 @@ public class MyAsyncTask extends AsyncTaskLoader<List<News>> {
     private List<News> extractJSON(String s) throws JSONException {
         List<News> news = new ArrayList<>();
         JSONObject root = new JSONObject(s);
-        JSONArray array = root.getJSONArray("results");
+        JSONObject response=root.getJSONObject("response");
+        JSONArray array = response.getJSONArray("results");
         for (int i = 0; i < array.length(); i++) {
             JSONObject result = array.getJSONObject(i);
             String type = result.getString("type");
@@ -73,6 +74,10 @@ public class MyAsyncTask extends AsyncTaskLoader<List<News>> {
         return news;
     }
 
-
+    @Override
+    protected void onStartLoading() {
+        super.onStartLoading();
+        forceLoad();
+    }
 }
 
