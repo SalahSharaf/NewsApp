@@ -14,11 +14,11 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import java.util.List;
 
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
-    public String URL = "https://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test";
+    public String URL ="https://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test";
     public ListView listView;
     public MyListAdapter listAdapter;
     public TextView textView;
@@ -79,19 +79,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
+        listAdapter = new MyListAdapter(getBaseContext(), 0, data);
+        listView.setAdapter(listAdapter);
+        progressBar.setVisibility(View.GONE);
+        refreshLayout.setRefreshing(false);
         if (data.isEmpty() && !no_Internet) {
             textView.setText(R.string.swipe_to_refresh);
         } else if (no_Internet) {
             textView.setText(R.string.no_internet_connection);
             progressBar.setVisibility(View.GONE);
-            refreshLayout.setRefreshing(false);
         } else if (!no_Internet && !data.isEmpty()) {
             textView.setText("");
-            listAdapter = new MyListAdapter(getBaseContext(), 0, data);
-            listView.setAdapter(listAdapter);
         }
-        progressBar.setVisibility(View.GONE);
-        refreshLayout.setRefreshing(false);
     }
 
     @Override
