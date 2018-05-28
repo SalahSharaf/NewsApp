@@ -18,7 +18,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
-    public String URL ="https://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test";
+    public String URL = "https://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test";
     public ListView listView;
     public MyListAdapter listAdapter;
     public TextView textView;
@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
-        listAdapter = new MyListAdapter(getBaseContext(), 0, data);
-        listView.setAdapter(listAdapter);
         progressBar.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
         if (data.isEmpty() && !no_Internet) {
@@ -90,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             progressBar.setVisibility(View.GONE);
         } else if (!no_Internet && !data.isEmpty()) {
             textView.setText("");
+            listAdapter = new MyListAdapter(getBaseContext(), 0, data);
+            listView.setAdapter(listAdapter);
         }
     }
 
