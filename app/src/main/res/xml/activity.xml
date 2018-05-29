@@ -4,8 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
+        android:icon="@drawable/ic_info_black_24dp"
         android:fragment="com.example.bios.newsapp.MyPreferenceFragment"
-        android:title="Goto: Preference fragment"
-        android:summary="An example of some preferences." />
-
+        android:title="News Preferences " />
 </preference-headers>

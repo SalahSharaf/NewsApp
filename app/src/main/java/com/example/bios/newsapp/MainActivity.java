@@ -3,8 +3,10 @@ package com.example.bios.newsapp;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,8 +16,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import java.util.List;
+import android.widget.Toast;
 
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
     public String URL = "https://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test";
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public ProgressBar progressBar;
     SwipeRefreshLayout refreshLayout;
     public boolean no_Internet;
+    public static boolean preferenceChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } else {
             textView.setText(R.string.no_internet_connection);
             progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (preferenceChanged) {
+            Toast.makeText(this, "Preferences have been modified Swipe to refresh", Toast.LENGTH_SHORT).show();
+            preferenceChanged = false;
         }
     }
 
@@ -88,9 +101,45 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             progressBar.setVisibility(View.GONE);
         } else if (!no_Internet && !data.isEmpty()) {
             textView.setText("");
-            listAdapter = new MyListAdapter(getBaseContext(), 0, data);
-            listView.setAdapter(listAdapter);
         }
+        ////////////////////check from here
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String sectionPreference = sharedPreferences.getString("list", getString(R.string.general));
+        List<News> mydata = data;
+        if (sectionPreference.equals(getString(R.string.general))) {
+            //do nothing with mydata
+        } else if (sectionPreference.equals("News")) {
+            for (int i = 0; i < mydata.size(); i++) {
+                if (mydata.get(i).getSectionName() == "News") {
+                    //leave it
+                } else {
+                    mydata.remove(i);
+                }
+            }
+        } else if (sectionPreference.equals("Politics")) {
+            for (int i = 0; i < mydata.size(); i++) {
+                if (mydata.get(i).getSectionName() == "Politics") {
+                    //leave it
+                } else {
+                    mydata.remove(i);
+                }
+            }
+        }
+        String datePreference = sharedPreferences.getString("monthSelection", "1");
+        Integer datePreferenceNumber = new Integer(datePreference);
+        for (int i = 0; i < mydata.size(); i++) {
+            String date = mydata.get(i).getDate();
+            String monthS = date.substring(date.indexOf("-") + 1, date.lastIndexOf("-") - 1);
+            Integer month = new Integer(monthS);
+            if (month >= datePreferenceNumber) {
+                //keep
+            } else {
+                mydata.remove(i);
+            }
+        }
+        listAdapter = new MyListAdapter(getBaseContext(), 0, mydata);
+        listView.setAdapter(listAdapter);
+
     }
 
     @Override

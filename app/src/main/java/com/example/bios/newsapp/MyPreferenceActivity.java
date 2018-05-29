@@ -16,5 +16,4 @@ public class MyPreferenceActivity extends PreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return MyPreferenceFragment.class.getName().equals(fragmentName);
     }
-
 }

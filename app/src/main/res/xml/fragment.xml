@@ -3,13 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="FOO">
-
-        <CheckBoxPreference
-            android:key="checkBoxPref"
-            android:title="check it out"
-            android:summary="click this little box"/>
-
+        android:title="General">
+        <ListPreference
+            android:defaultValue="@string/general"
+            android:entries="@array/entries"
+            android:entryValues="@array/entries_value"
+            android:key="list"
+            android:title="choose which Section to show" />
+        <EditTextPreference
+            android:numeric="integer"
+            android:defaultValue="1"
+            android:key="monthSelection"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="choose month to set limit for news" />
     </PreferenceCategory>
 
 </PreferenceScreen>
