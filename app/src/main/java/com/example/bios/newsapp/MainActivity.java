@@ -6,6 +6,7 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     SwipeRefreshLayout refreshLayout;
     public boolean no_Internet;
     public static boolean preferenceChanged;
+    public static String listValue, monthSelectionValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,38 +105,37 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } else if (!no_Internet && !data.isEmpty()) {
             textView.setText("");
         }
-        ////////////////////check from here
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String sectionPreference = sharedPreferences.getString("list", getString(R.string.general));
-        List<News> mydata = data;
-        if (sectionPreference.equals(getString(R.string.general))) {
+        SharedPreferences preference= PreferenceManager.getDefaultSharedPreferences(this);
+        listValue=preference.getString("list","");
+        monthSelectionValue=preference.getString("monthSelection","");
+        List<News> mydata = new ArrayList<>(data);
+        if (listValue.equalsIgnoreCase(getString(R.string.general))) {
             //do nothing with mydata
-        } else if (sectionPreference.equals("News")) {
+            Toast.makeText(this, "i got here ", Toast.LENGTH_SHORT).show();
+        } else if (listValue.equalsIgnoreCase("News")) {
             for (int i = 0; i < mydata.size(); i++) {
-                if (mydata.get(i).getSectionName() == "News") {
-                    //leave it
-                } else {
+                if (!mydata.get(i).getSectionName().equalsIgnoreCase("News")) {
                     mydata.remove(i);
                 }
             }
-        } else if (sectionPreference.equals("Politics")) {
+        } else if (listValue.equalsIgnoreCase("Politics")) {
             for (int i = 0; i < mydata.size(); i++) {
-                if (mydata.get(i).getSectionName() == "Politics") {
-                    //leave it
-                } else {
+                if (!mydata.get(i).getSectionName().equalsIgnoreCase("Politics")) {
+                    mydata.remove(i);
+                }
+            }
+        } else if (listValue.equalsIgnoreCase("Business")) {
+            for (int i = 0; i < mydata.size(); i++) {
+                if (!mydata.get(i).getSectionName().equalsIgnoreCase("Business")) {
                     mydata.remove(i);
                 }
             }
         }
-        String datePreference = sharedPreferences.getString("monthSelection", "1");
-        Integer datePreferenceNumber = new Integer(datePreference);
         for (int i = 0; i < mydata.size(); i++) {
             String date = mydata.get(i).getDate();
-            String monthS = date.substring(date.indexOf("-") + 1, date.lastIndexOf("-") - 1);
+            String monthS = date.substring(date.indexOf("-") + 1, date.lastIndexOf("-"));
             Integer month = new Integer(monthS);
-            if (month >= datePreferenceNumber) {
-                //keep
-            } else {
+            if (month < Integer.valueOf(monthSelectionValue)) {
                 mydata.remove(i);
             }
         }
