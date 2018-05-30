@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         List<News> mydata = new ArrayList<>(data);
         if (listValue.equalsIgnoreCase(getString(R.string.general))) {
             //do nothing with mydata
-            Toast.makeText(this, "i got here ", Toast.LENGTH_SHORT).show();
         } else if (listValue.equalsIgnoreCase("News")) {
             for (int i = 0; i < mydata.size(); i++) {
                 if (!mydata.get(i).getSectionName().equalsIgnoreCase("News")) {
