@@ -8,7 +8,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
-    public String URL = "https://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test";
+    public String URL = "https://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test&show-tags=contributor";
     public ListView listView;
     public MyListAdapter listAdapter;
     public TextView textView;
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean no_Internet;
     public static boolean preferenceChanged;
     public static String listValue, monthSelectionValue;
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,22 +73,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onResume() {
         super.onResume();
         if (preferenceChanged) {
-            Toast.makeText(this, "Preferences have been modified Swipe to refresh", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.preferences_have_been_modified_Swipe_to_refresh, Toast.LENGTH_SHORT).show();
             preferenceChanged = false;
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+        getMenuInflater().inflate(R.menu.menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.toggle) {
-            Intent prefrence = new Intent(this, MyPreferenceActivity.class);
-            startActivity(prefrence);
+            Intent preference = new Intent(getBaseContext(), MyPreferenceActivity.class);
+            startActivity(preference);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -96,36 +101,40 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
         progressBar.setVisibility(View.GONE);
-        refreshLayout.setRefreshing(false);
-        if (data.isEmpty() && !no_Internet) {
-            textView.setText(R.string.swipe_to_refresh);
+        if (!data.isEmpty() && !no_Internet) {
+            textView.setText("");
+            listView.setVisibility(View.VISIBLE);
+            listAdapter = new MyListAdapter(getBaseContext(), 0, data);
+            listView.setAdapter(listAdapter);
         } else if (no_Internet) {
             textView.setText(R.string.no_internet_connection);
             progressBar.setVisibility(View.GONE);
-        } else if (!no_Internet && !data.isEmpty()) {
-            textView.setText("");
+            listView.setVisibility(View.GONE);
+        } else {
+            textView.setText(R.string.swipe_to_refresh);
         }
-        SharedPreferences preference= PreferenceManager.getDefaultSharedPreferences(this);
-        listValue=preference.getString("list","");
-        monthSelectionValue=preference.getString("monthSelection","");
+        refreshLayout.setRefreshing(false);
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
+        listValue = preference.getString(getString(R.string.liat), "");
+        monthSelectionValue = preference.getString(getString(R.string.monthselection), "");
         List<News> mydata = new ArrayList<>(data);
         if (listValue.equalsIgnoreCase(getString(R.string.general))) {
             //do nothing with mydata
-        } else if (listValue.equalsIgnoreCase("News")) {
+        } else if (listValue.equalsIgnoreCase(getString(R.string.news))) {
             for (int i = 0; i < mydata.size(); i++) {
-                if (!mydata.get(i).getSectionName().equalsIgnoreCase("News")) {
+                if (!mydata.get(i).getSectionName().equalsIgnoreCase(getString(R.string.news))) {
                     mydata.remove(i);
                 }
             }
-        } else if (listValue.equalsIgnoreCase("Politics")) {
+        } else if (listValue.equalsIgnoreCase(getString(R.string.politics))) {
             for (int i = 0; i < mydata.size(); i++) {
-                if (!mydata.get(i).getSectionName().equalsIgnoreCase("Politics")) {
+                if (!mydata.get(i).getSectionName().equalsIgnoreCase(getString(R.string.politics))) {
                     mydata.remove(i);
                 }
             }
-        } else if (listValue.equalsIgnoreCase("Business")) {
+        } else if (listValue.equalsIgnoreCase(getString(R.string.business))) {
             for (int i = 0; i < mydata.size(); i++) {
-                if (!mydata.get(i).getSectionName().equalsIgnoreCase("Business")) {
+                if (!mydata.get(i).getSectionName().equalsIgnoreCase(getString(R.string.business))) {
                     mydata.remove(i);
                 }
             }
@@ -138,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 mydata.remove(i);
             }
         }
-        listAdapter = new MyListAdapter(getBaseContext(), 0, mydata);
+        listAdapter = new MyListAdapter(getBaseContext(), 0, data);
         listView.setAdapter(listAdapter);
 
     }

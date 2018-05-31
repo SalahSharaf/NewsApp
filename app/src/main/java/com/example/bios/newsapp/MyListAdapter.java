@@ -34,7 +34,7 @@ public class MyListAdapter extends ArrayAdapter<News> implements View.OnClickLis
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listitem_layout, null);
         }
-        TextView type, title, date,section;
+        TextView type, title, date,section,names;
         type = convertView.findViewById(R.id.type);
         title = convertView.findViewById(R.id.title);
         date = convertView.findViewById(R.id.date);
@@ -42,6 +42,11 @@ public class MyListAdapter extends ArrayAdapter<News> implements View.OnClickLis
         title.setText(news.get(position).getWebTitle());
         date.setText(news.get(position).getDate());
         section=convertView.findViewById(R.id.sectionName);
+        names=convertView.findViewById(R.id.names);
+        names.setText("Written by : ");
+        for(String s:news.get(position).getNames()) {
+            names.append(s+"\n");
+        }
         section.setText(" / "+news.get(position).getSectionName());
         convertView.setOnClickListener(this);
         convertView.setTag(position);

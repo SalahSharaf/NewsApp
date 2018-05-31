@@ -1,14 +1,26 @@
 package com.example.bios.newsapp;
 
+import java.util.List;
+
 public class News {
     private String Type,SectionName,WebTitle,WebUrl,Date;
+    private List<String> names;
 
-    public News(String type, String sectionName, String webTitle, String webUrl,String date) {
+    public News(String type, String sectionName, String webTitle, String webUrl, String date, List<String> Names) {
         Type = type;
         SectionName = sectionName;
         WebTitle = webTitle;
         WebUrl = webUrl;
         this.Date=date;
+        this.names=Names;
+    }
+
+    public List<String> getNames() {
+        return names;
+    }
+
+    public void setNames(List<String> names) {
+        this.names = names;
     }
 
     public String getDate() {

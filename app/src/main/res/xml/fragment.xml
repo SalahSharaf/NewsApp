@@ -8,15 +8,15 @@
             android:defaultValue="@string/general"
             android:entries="@array/entries"
             android:entryValues="@array/entries_value"
-            android:key="list"
-            android:title="choose which Section to show" />
+            android:key="@string/liat"
+            android:title="@string/which_section_to_show" />
         <EditTextPreference
             android:numeric="integer"
             android:defaultValue="1"
-            android:key="monthSelection"
+            android:key="@string/monthselection"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="choose month to set limit for news" />
+            android:title="@string/set_limit" />
     </PreferenceCategory>
 
 </PreferenceScreen>

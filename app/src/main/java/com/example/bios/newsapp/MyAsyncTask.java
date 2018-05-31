@@ -60,7 +60,7 @@ public class MyAsyncTask extends AsyncTaskLoader<List<News>> {
     private List<News> extractJSON(String s) throws JSONException {
         List<News> news = new ArrayList<>();
         JSONObject root = new JSONObject(s);
-        JSONObject response=root.getJSONObject("response");
+        JSONObject response = root.getJSONObject("response");
         JSONArray array = response.getJSONArray("results");
         for (int i = 0; i < array.length(); i++) {
             JSONObject result = array.getJSONObject(i);
@@ -69,7 +69,16 @@ public class MyAsyncTask extends AsyncTaskLoader<List<News>> {
             String Date = result.getString("webPublicationDate");
             String webTitle = result.getString("webTitle");
             String url = result.getString("webUrl");
-            news.add(new News(type, sectionName, webTitle, url, Date));
+            JSONArray tags = result.getJSONArray("tags");
+            List<String> names=new ArrayList<>();
+            for (int x = 0; x < tags.length(); x++) {
+                JSONObject object = tags.getJSONObject(i);
+                String first, last;
+                first = object.getString("firstName");
+                last = object.getString("lastName");
+                names.add(first + " " + last);
+            }
+            news.add(new News(type, sectionName, webTitle, url, Date,names));
         }
         return news;
     }

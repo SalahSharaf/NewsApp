@@ -39,4 +39,10 @@
         android:text="@string/place_holder"
         android:textSize="16sp"
         android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/title"
+        android:id="@+id/names"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

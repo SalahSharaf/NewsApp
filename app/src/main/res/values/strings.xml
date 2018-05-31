@@ -6,15 +6,25 @@
     <string name="no_internet_connection">No Internet Connection Swipe to refresh</string>
     <string-array name="entries">
         <item>@string/general</item>
-        <item>News</item>
-        <item>Politics</item>
-        <item>Business</item>
+        <item>@string/news</item>
+        <item>@string/politics</item>
+        <item>@string/business</item>
     </string-array>
     <string-array name="entries_value">
         <item>@string/general</item>
-        <item>News</item>
-        <item>Politics</item>
-        <item>Business</item>
+        <item>@string/news</item>
+        <item>@string/politics</item>
+        <item>@string/business</item>
     </string-array>
     <string name="general">General</string>
+    <string name="news">News</string>
+    <string name="politics">Politics</string>
+    <string name="business">Business</string>
+    <string name="monthselection">monthSelection</string>
+    <string name="liat">list</string>
+    <string name="which_section_to_show">choose which Section to show</string>
+    <string name="set_limit">choose month to set limit for news</string>
+    <string name="start">start</string>
+    <string name="close">close</string>
+    <string name="preferences_have_been_modified_Swipe_to_refresh">Preferences have been modified Swipe to refresh</string>
 </resources>
