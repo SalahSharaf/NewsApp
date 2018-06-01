@@ -6,11 +6,7 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +24,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
     public String URL = "https://content.guardianapis.com/search?q=debate&tag=politics/politics&from-date=2014-01-01&api-key=test&show-tags=contributor";
+    //public String URL = "https://content.guardianapis.com/search?q=debates&api-key=test";
     public ListView listView;
     public MyListAdapter listAdapter;
     public TextView textView;
@@ -104,8 +101,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (!data.isEmpty() && !no_Internet) {
             textView.setText("");
             listView.setVisibility(View.VISIBLE);
-            listAdapter = new MyListAdapter(getBaseContext(), 0, data);
-            listView.setAdapter(listAdapter);
         } else if (no_Internet) {
             textView.setText(R.string.no_internet_connection);
             progressBar.setVisibility(View.GONE);
@@ -115,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         refreshLayout.setRefreshing(false);
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
-        listValue = preference.getString(getString(R.string.liat), "");
-        monthSelectionValue = preference.getString(getString(R.string.monthselection), "");
+        listValue = preference.getString(getString(R.string.liat), getString(R.string.general));
+        monthSelectionValue = preference.getString(getString(R.string.monthselection), "1");
         List<News> mydata = new ArrayList<>(data);
         if (listValue.equalsIgnoreCase(getString(R.string.general))) {
             //do nothing with mydata
@@ -147,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 mydata.remove(i);
             }
         }
-        listAdapter = new MyListAdapter(getBaseContext(), 0, data);
+        listAdapter = new MyListAdapter(getBaseContext(), 0, mydata);
         listView.setAdapter(listAdapter);
 
     }

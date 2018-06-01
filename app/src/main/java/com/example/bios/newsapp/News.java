@@ -14,7 +14,13 @@ public class News {
         this.Date=date;
         this.names=Names;
     }
-
+    public News(String type, String sectionName, String webTitle, String webUrl, String date) {
+        Type = type;
+        SectionName = sectionName;
+        WebTitle = webTitle;
+        WebUrl = webUrl;
+        this.Date=date;
+    }
     public List<String> getNames() {
         return names;
     }

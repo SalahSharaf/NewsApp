@@ -3,6 +3,7 @@ package com.example.bios.newsapp;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -37,7 +38,7 @@ public class MyAsyncTask extends AsyncTaskLoader<List<News>> {
             URL url = new URL(URL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setReadTimeout(10000);
+            //connection.setReadTimeout(10000);
             connection.connect();
             stream = connection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -53,6 +54,7 @@ public class MyAsyncTask extends AsyncTaskLoader<List<News>> {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.e("error","Error");
         }
         return news;
     }
@@ -72,8 +74,8 @@ public class MyAsyncTask extends AsyncTaskLoader<List<News>> {
             JSONArray tags = result.getJSONArray("tags");
             List<String> names=new ArrayList<>();
             for (int x = 0; x < tags.length(); x++) {
-                JSONObject object = tags.getJSONObject(i);
-                String first, last;
+                JSONObject object = tags.getJSONObject(x);
+                String first,last;
                 first = object.getString("firstName");
                 last = object.getString("lastName");
                 names.add(first + " " + last);

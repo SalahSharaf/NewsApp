@@ -19,7 +19,7 @@ public class MyListAdapter extends ArrayAdapter<News> implements View.OnClickLis
     List<News> news;
 
     public MyListAdapter(@NonNull Context context, int resource, List<News> news) {
-        super(context, resource);
+        super(context, resource, news);
         this.news = news;
     }
 
@@ -34,20 +34,21 @@ public class MyListAdapter extends ArrayAdapter<News> implements View.OnClickLis
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listitem_layout, null);
         }
-        TextView type, title, date,section,names;
+        TextView type, title, date, section, names;
         type = convertView.findViewById(R.id.type);
         title = convertView.findViewById(R.id.title);
         date = convertView.findViewById(R.id.date);
         type.setText(news.get(position).getType());
         title.setText(news.get(position).getWebTitle());
         date.setText(news.get(position).getDate());
-        section=convertView.findViewById(R.id.sectionName);
-        names=convertView.findViewById(R.id.names);
+        section = convertView.findViewById(R.id.sectionName);
+        section.setText(" / " + news.get(position).getSectionName());
+        names = convertView.findViewById(R.id.names);
         names.setText("Written by : ");
-        for(String s:news.get(position).getNames()) {
-            names.append(s+"\n");
+        for (String s : news.get(position).getNames()) {
+            names.append(s + " | ");
         }
-        section.setText(" / "+news.get(position).getSectionName());
+
         convertView.setOnClickListener(this);
         convertView.setTag(position);
         return convertView;
